@@ -3,15 +3,11 @@ import { buildArray } from "../../utils/builder";
 import Board from "../Board";
 
 const Game = () => {
-  const tempArray = [
-    [{ unCaptured: true }, null, null],
-    [null, null, { unCaptured: true }],
-    [null, { unCaptured: true }, null],
-  ];
-
   const [numRows, setNumRows] = useState(0);
   const [numCols, setNumCols] = useState(0);
   const [boardArray, setBoardArray] = useState([]);
+  const [playerCol, setPlayerCol] = useState();
+  const [playerRow, setPlayerRow] = useState();
 
   useEffect(() => {
     // prompt for columns and rows
@@ -56,6 +52,10 @@ const Game = () => {
       }
     }
 
+    //place mario in middle
+    setPlayerCol(Math.floor(cols / 2) - 1);
+    setPlayerRow(Math.floor(rows / 2) - 1);
+
     // build board array
     const arr = buildArray(rows, cols);
     setBoardArray(arr);
@@ -64,7 +64,11 @@ const Game = () => {
   return (
     <div>
       {numRows && numCols ? (
-        <Board gameState={boardArray} playerCol={0} playerRow={0} />
+        <Board
+          gameState={boardArray}
+          playerCol={playerCol}
+          playerRow={playerRow}
+        />
       ) : (
         "Loading ..."
       )}
