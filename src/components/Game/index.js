@@ -5,7 +5,7 @@ import Board from "../Board";
 const Game = () => {
   const [numRows, setNumRows] = useState(0);
   const [numCols, setNumCols] = useState(0);
-  const [boardArray, setBoardArray] = useState([]);
+  const [boardArray, setBoardArray] = useState();
   const [playerCol, setPlayerCol] = useState();
   const [playerRow, setPlayerRow] = useState();
 
@@ -60,6 +60,41 @@ const Game = () => {
     const arr = buildArray(rows, cols);
     setBoardArray(arr);
   }, []);
+
+  useEffect(() => {
+    const handlePlayerMove = (evt) => {
+      switch (evt.key) {
+        case "ArrowUp":
+          if (playerRow > 0) {
+            setPlayerRow(playerRow - 1);
+          }
+          break;
+        case "ArrowDown":
+          if (playerRow < numRows - 1) {
+            setPlayerRow(playerRow + 1);
+          }
+          break;
+        case "ArrowLeft":
+          if (playerCol > 0) {
+            setPlayerCol(playerCol - 1);
+          }
+          break;
+        case "ArrowRight":
+          if (playerCol < numCols - 1) {
+            setPlayerCol(playerCol + 1);
+          }
+          break;
+        default:
+          break;
+      }
+    };
+
+    window.addEventListener("keydown", handlePlayerMove);
+
+    return () => {
+      window.removeEventListener("keydown", handlePlayerMove);
+    };
+  }, [playerRow, playerCol, numRows, numCols]);
 
   return (
     <div>

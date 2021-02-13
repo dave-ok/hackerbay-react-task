@@ -4,11 +4,19 @@ import Square from "../Square";
 
 const Board = ({ gameState, playerRow, playerCol }) => {
   const [pieces, setPieces] = useState([]);
+  const [lPlayerRow, setLPlayerRow] = useState(playerRow);
+  const [lPlayerCol, setLPlayerCol] = useState(playerCol);
+
   const initialGameState = useRef(gameState);
   useEffect(() => {
     // initialize the gameState
     setPieces(initialGameState.current);
   }, []);
+
+  useEffect(() => {
+    setLPlayerCol(playerCol);
+    setLPlayerRow(playerRow);
+  }, [playerRow, playerCol]);
 
   return (
     <div>
@@ -25,7 +33,7 @@ const Board = ({ gameState, playerRow, playerCol }) => {
                 let piece;
 
                 // if the current position is the player position (takes precedence)
-                if (playerRow === rowIndex && playerCol === colIndex) {
+                if (lPlayerRow === rowIndex && lPlayerCol === colIndex) {
                   piece = "mario";
                 } else if (elem && elem.unCaptured) {
                   // mushroom object - only show when un-captured
