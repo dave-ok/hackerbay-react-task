@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { buildArray } from "../../utils/builder";
 import Board from "../Board";
+import "./game.css";
 
 const Game = () => {
   const [numRows, setNumRows] = useState(0);
@@ -11,9 +12,11 @@ const Game = () => {
   const [playerRow, setPlayerRow] = useState();
   const [mushroomsCaptured, setMushroomsCaptured] = useState(0);
   const [moves, setMoves] = useState(0);
-  const mushroomCount = useRef(0);
+  const mushroomCount = useRef();
+  const [gameOver, setGameOver] = useState(false);
+  const [resetGame, setResetGame] = useState(false);
 
-  useEffect(() => {
+  const handleGameReset = () => {
     // prompt for columns and rows
     let rowsEntered = false;
     let rows, cols;
@@ -66,11 +69,27 @@ const Game = () => {
     setMushrooms(arr.mushroomMap);
 
     mushroomCount.current = arr.mushroomMap.size;
+  };
+
+  // initialize game
+  useEffect(() => {
+    handleGameReset();
   }, []);
 
+  // reset game manually
+  useEffect(() => {
+    if (resetGame) {
+      handleGameReset();
+      setResetGame(false);
+    }
+  }, [resetGame]);
+
+  // handle player moves
   useEffect(() => {
     const increaseMoves = () => setMoves((prevMoves) => prevMoves + 1);
     const handlePlayerMove = (evt) => {
+      // stop player movement when game is over
+      if (gameOver) return;
       switch (evt.key) {
         case "ArrowUp":
           if (playerRow > 0) {
@@ -105,8 +124,9 @@ const Game = () => {
     return () => {
       window.removeEventListener("keydown", handlePlayerMove);
     };
-  }, [playerRow, playerCol, numRows, numCols, boardArray]);
+  }, [playerRow, playerCol, numRows, numCols, gameOver]);
 
+  // track mushroom states
   useEffect(() => {
     const checkMushroomCaptured = (row, col) => {
       // if mushrooms exists at position
@@ -132,16 +152,38 @@ const Game = () => {
     };
 
     checkMushroomCaptured(playerRow, playerCol);
-  }, [playerCol, playerRow, mushrooms, boardArray]);
+  }, [playerCol, playerRow, mushrooms]);
+
+  // track game status
+  useEffect(() => {
+    if (mushroomsCaptured >= mushroomCount.current) {
+      setGameOver(true);
+      alert(`Congratulations you saved the princess in ${moves} moves.`);
+    }
+  }, [mushroomsCaptured, moves]);
+
+  const onGameReset = () => {
+    setResetGame(true);
+  };
 
   return (
-    <div>
+    <div className="game">
       {numRows && numCols ? (
-        <Board
-          gameState={boardArray}
-          playerCol={playerCol}
-          playerRow={playerRow}
-        />
+        <div>
+          <Board
+            gameState={boardArray}
+            playerCol={playerCol}
+            playerRow={playerRow}
+          />
+          <div className="reset-button">
+            <button onClick={onGameReset}>Reset</button>
+          </div>
+          <div className="stats-bar">
+            <div>Moves: {moves}</div>
+            <div>Captured: {mushroomsCaptured}</div>
+            <div>Total: {mushroomCount.current}</div>
+          </div>
+        </div>
       ) : (
         "Loading ..."
       )}
