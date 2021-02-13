@@ -1,6 +1,6 @@
 const getRandomMushrooms = (rows, cols) => {
   const mushroomCount = Math.max(rows, cols);
-  const mushrooms = new Set();
+  const mushrooms = new Map();
 
   while (mushrooms.size < mushroomCount) {
     const colCenter = Math.floor(cols / 2) - 1;
@@ -12,11 +12,12 @@ const getRandomMushrooms = (rows, cols) => {
     // avoid center for mario
     if (col === colCenter && row === rowCenter) continue;
 
-    mushrooms.add(
+    mushrooms.set(
       JSON.stringify({
-        col,
         row,
-      })
+        col,
+      }),
+      { unCaptured: true }
     );
   }
 
@@ -24,12 +25,12 @@ const getRandomMushrooms = (rows, cols) => {
 };
 
 export const buildArray = (numRows, numCols) => {
-  const mushroomSet = getRandomMushrooms(numRows, numCols);
+  const mushroomMap = getRandomMushrooms(numRows, numCols);
   const boardArray = [];
   for (let row = 0; row < numRows; row++) {
     boardArray[row] = [];
     for (let col = 0; col < numCols; col++) {
-      if (mushroomSet.has(JSON.stringify({ col, row }))) {
+      if (mushroomMap.has(JSON.stringify({ row, col }))) {
         boardArray[row][col] = { unCaptured: true };
       } else {
         boardArray[row][col] = null;
@@ -37,5 +38,5 @@ export const buildArray = (numRows, numCols) => {
     }
   }
 
-  return boardArray;
+  return { boardArray, mushroomMap };
 };

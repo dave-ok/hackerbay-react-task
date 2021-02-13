@@ -18,6 +18,10 @@ const Board = ({ gameState, playerRow, playerCol }) => {
     setLPlayerRow(playerRow);
   }, [playerRow, playerCol]);
 
+  useEffect(() => {
+    setPieces([...gameState]);
+  }, [gameState]);
+
   return (
     <div>
       {pieces.length &&
