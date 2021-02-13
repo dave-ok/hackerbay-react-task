@@ -23,7 +23,7 @@ const Board = ({ gameState, playerRow, playerCol }) => {
   }, [gameState]);
 
   return (
-    <div>
+    <div className="board">
       {pieces.length &&
         pieces.map((row, rowIndex) => {
           return (
