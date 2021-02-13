@@ -1,6 +1,7 @@
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A live demo version can be viewed [here](https://hackerbay-maze-task.netlify.app/).
 
 ## Available Scripts
 
