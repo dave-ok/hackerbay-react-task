@@ -69,6 +69,9 @@ const Game = () => {
     setMushrooms(arr.mushroomMap);
 
     mushroomCount.current = arr.mushroomMap.size;
+    setMoves(0);
+    setMushroomsCaptured(0);
+    setGameOver(false);
   };
 
   // initialize game
